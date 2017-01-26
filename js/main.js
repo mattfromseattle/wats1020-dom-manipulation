@@ -5,8 +5,8 @@
 
 $(document).ready(function () {
     var userInfo = {
-        firstName: 'Jane',
-        lastName: 'Doe'
+        firstName: 'Matt',
+        lastName: 'Dewey'
     };
     var voteCounts = {
         great: 0,
@@ -14,13 +14,16 @@ $(document).ready(function () {
         total: 0
     };
 
-// Function looks for the interaction with the button to hide the text field input boxes
-  $("#login-form .btn-sm").click(function(){
- $("#login-form").toggle(1000);
- // After hiding the input fields, it displays the user's first and last name.
-    $(".user-info").text("Greetings, " + userInfo.firstName +" "+ userInfo.lastName+"!");
-    $(".user-info").toggle(1000);
-});
+    // Function looks for the interaction with the button to hide the text field input boxes
+    $("#login-form .btn-sm").click(function () {
+        $("#login-form").toggle(1000);
+        // After hiding the input fields, it displays the user's first and last name.
+        $(".user-info").text("Greetings, " + userInfo.firstName + " " + userInfo.lastName + "!");
+        $(".user-info").css({
+            'font-size': $(this).val()
+        });
+        $(".user-info").toggle(2000);
+    });
 });
 
 // This looks for the button to be clicked and then expose the hidden content.
@@ -30,31 +33,46 @@ $('.view-details').on('click', function (event) {
     var targetElement = event.target;
     var container = targetElement.parentElement.parentElement;
     // This finds the 'hidden' text on the page to display.
-    $(container).find('.details').each(function (index, el) {
+    $(container).find('.details').each(function (index, content) {
         //This looks to see if the content is visible. If it is, it closes it.
-        if ($(el).is(':visible')) {
+        if ($(content).is(':visible')) {
             //This animation will slide the content to close with a set interval.
-            $(el).slideUp(1000);
+            $(content).slideUp(1000);
             //This changes the label of the button to be 'View Details'
             targetElement.innerText = "View Details"
             // If the content isn't visible, the hidden content slides down
         } else {
-            $(el).slideDown(1000);
+            $(content).slideDown(1000);
             // Button text is updated to show as 'Hide Details'
             targetElement.innerText = "Hide Details"
         }
     })
-});
 
-// TODO: Create a function that listens for clicks on the voting buttons and
-// looks at the `data-vote` attribute on each button to see what was voted for,
-// then determines the updated vote breakdown to adjust the progress bars.
-//      1. Set up an event listener on the buttons with the `vote` class.
-//      2. When a button is clicked, look at the `data-vote` attribute to determine
-//          what the user is voting for ("great" or "greatest").
-//      3. Increment the counter for whichever vote talley is affected.
-//      4. Determine the respective percentages (out of 100) for each progress bar.
-//      5. Modify the `width` attribute on each progress bar to set the updated percentage.
-$('').on('click', function(event){
-    console.log(event);
+    // TODO: Create a function that listens for clicks on the voting buttons and
+    // looks at the `data-vote` attribute on each button to see what was voted for,
+    // then determines the updated vote breakdown to adjust the progress bars.
+    //      1. Set up an event listener on the buttons with the `vote` class.
+    //      2. When a button is clicked, look at the `data-vote` attribute to determine
+    //          what the user is voting for ("great" or "greatest").
+    //      3. Increment the counter for whichever vote talley is affected.
+    //      4. Determine the respective percentages (out of 100) for each progress bar.
+    //      5. Modify the `width` attribute on each progress bar to set the updated percentage.
+    $('.voting btn-lg').on('click', function (event) {
+        console.log(event);
+        voteCounts.total++;
+        var targetElement = event.target;
+
+        if ($(targetElement).data('vote') === 'great') {
+            voteCounts.great++;
+        } else {
+            voteCounts.greatest++;
+        }
+
+        var greatPercent = (voteCounts.great / voteCounts.total * 100);
+        var greatestPercent = (voteCounts.greatest / voteCounts.total * 100);
+
+        $('.great-progress').css('width', greatPercent + '%');
+        $('greatest-progress').css('width', greatestPercent + '%');
+        console.log(voteCounts.great, voteCounts.greatest, voteCounts.total, greatPercent, greatestPercent);
+    });
 });
