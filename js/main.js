@@ -24,7 +24,6 @@ $(document).ready(function () {
         });
         $(".user-info").toggle(2000);
     });
-});
 
 // This looks for the button to be clicked and then expose the hidden content.
 $('.view-details').on('click', function (event) {
@@ -48,31 +47,26 @@ $('.view-details').on('click', function (event) {
         }
     })
 
-    // TODO: Create a function that listens for clicks on the voting buttons and
-    // looks at the `data-vote` attribute on each button to see what was voted for,
-    // then determines the updated vote breakdown to adjust the progress bars.
-    //      1. Set up an event listener on the buttons with the `vote` class.
-    //      2. When a button is clicked, look at the `data-vote` attribute to determine
-    //          what the user is voting for ("great" or "greatest").
-    //      3. Increment the counter for whichever vote talley is affected.
-    //      4. Determine the respective percentages (out of 100) for each progress bar.
-    //      5. Modify the `width` attribute on each progress bar to set the updated percentage.
-    $('.voting btn-lg').on('click', function (event) {
-        console.log(event);
-        voteCounts.total++;
+// This is the section for the voting buttons
+});
+// This listens for a click event on one of the voting buttons.
+    $('.vote').on('click', function (event) {
+        //This will increment the total voting count for each click.
+       voteCounts.total++;
         var targetElement = event.target;
-
+        // Check to see if the vote is going to 'great' or 'greatest'
         if ($(targetElement).data('vote') === 'great') {
+            // Incrememt the 'great' vote count by 1.
             voteCounts.great++;
         } else {
+            // Incrememt the 'greatest' vote count by 1.
             voteCounts.greatest++;
         }
-
+        // Tally the votes and divide by 100 to get a percentage.
         var greatPercent = (voteCounts.great / voteCounts.total * 100);
         var greatestPercent = (voteCounts.greatest / voteCounts.total * 100);
-
+        // Adjust the styling on the vote tally graph, adjusting size of each according to votes.
         $('.great-progress').css('width', greatPercent + '%');
-        $('greatest-progress').css('width', greatestPercent + '%');
-        console.log(voteCounts.great, voteCounts.greatest, voteCounts.total, greatPercent, greatestPercent);
+        $('.greatest-progress').css('width', greatestPercent + '%');
     });
-});
+    });
